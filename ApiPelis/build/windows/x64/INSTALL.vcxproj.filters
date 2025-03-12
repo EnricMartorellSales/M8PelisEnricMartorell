@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\enric\Desktop\PRACTICAS_SALES\M8\M8PelisEnricMartorell\ApiPelis\build\windows\x64\CMakeFiles\2a383f893dce6d46a87200b0ff7469b5\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{79556B46-32C4-3C97-8521-BE61E9780B11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
