@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:movies/models/actor.dart';
 import 'package:movies/api/api_service.dart';
 import '../models/movie.dart';
 import 'movies_details_screen.dart';
+import '../controllers/actors_controller.dart';
 
 class ActorDetailScreen extends StatelessWidget {
   final Actor actor;
@@ -11,14 +13,28 @@ class ActorDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final actorsController = Get.find<ActorsController>();
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
           actor.name, 
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF242A32), 
+          style: const TextStyle(color: Colors.white),),
+        backgroundColor: const Color(0xFF242A32),
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Obx(() => Icon(
+              actorsController.isInActorsList(actor)
+                ? Icons.favorite
+                : Icons.favorite_border,
+              color: Colors.red,
+            )),
+            onPressed: () {
+              actorsController.addToActorsList(actor);
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -39,12 +55,26 @@ class ActorDetailScreen extends StatelessWidget {
                 ),
               const SizedBox(height: 16),
               Text(
-                actor.name, // Nombre del actor
+                actor.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
                 ),
               ),
+              if (actor.popularity != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Popularity: ${actor.popularity!.toStringAsFixed(1)}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
               const SizedBox(height: 16),
               if (actor.biography != null && actor.biography!.isNotEmpty)
                 Text(
@@ -53,7 +83,7 @@ class ActorDetailScreen extends StatelessWidget {
                 ),
               const SizedBox(height: 24),
               const Text(
-                'Movies',
+                'Known For',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -71,44 +101,40 @@ class ActorDetailScreen extends StatelessWidget {
                     return const Text('No movies available');
                   } else {
                     List<Movie> movies = snapshot.data!;
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: movies.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            // Navegar a la pantalla de detalles de la película
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MoviesDetailsScreen(
+                    return SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: movies.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(MoviesDetailsScreen(
                                   movie: movies[index],
-                                ),
+                                ));
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: movies[index].posterPath.isNotEmpty
+                                    ? Image.network(
+                                        'https://image.tmdb.org/t/p/w185${movies[index].posterPath}',
+                                        width: 120,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Container(
+                                        width: 120,
+                                        color: Colors.grey[800],
+                                        child: const Center(
+                                          child: Icon(Icons.movie, size: 50),
+                                        ),
+                                      ),
                               ),
-                            );
-                          },
-                          child: ListTile(
-                            leading: movies[index].posterPath.isNotEmpty
-                                ? ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                'https://image.tmdb.org/t/p/w92${movies[index].posterPath}',
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                                : const Icon(Icons.image, size: 50),
-                            title: Text(
-                              movies[index].title,
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
                             ),
-                            subtitle: Text(
-                              movies[index].releaseDate,
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   }
                 },
