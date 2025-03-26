@@ -48,7 +48,6 @@ class WatchList extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 30),
-                
                 // Movies Section
                 if (moviesController.watchListMovies.isNotEmpty) ...[
                   const Text(
@@ -103,7 +102,6 @@ class WatchList extends StatelessWidget {
                     ),
                   ),
                 ],
-                
                 // Actors Section
                 if (moviesController.watchListActors.isNotEmpty) ...[
                   const Text(
@@ -173,7 +171,6 @@ class WatchList extends StatelessWidget {
                     ),
                   ),
                 ],
-                
                 // Empty State
                 if (moviesController.watchListMovies.isEmpty &&
                     moviesController.watchListActors.isEmpty)
