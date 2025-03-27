@@ -4,4 +4,7 @@ class ApiEndPoints {
   static const upcomingMovies = "movie/upcoming";
   static const getGenreList = "genre/movie/list";
   static const popularActors = "person/popular";
+  static const popularTvShows = "tv/popular";
+  static const topRatedTvShows = "tv/top_rated";
+  static const tvShowDetails = "tv";
 }
