@@ -150,7 +150,32 @@ class ApiService {
     return movies;
   }
 
-  // ==================== MÉTODOS NUEVOS PARA SERIES ====================
+  static Future<List<Actor>> searchActors(String query) async {
+    List<Actor> actors = [];
+    try {
+      final response = await http.get(Uri.parse(
+          '${Api.baseUrl}search/person?api_key=${Api.apiKey}&language=en-US&query=$query&page=1'));
+      var data = jsonDecode(response.body);
+      if (data['results'] != null) {
+        for (var actorData in data['results']) {
+          actors.add(Actor(
+            id: actorData['id'],
+            name: actorData['name'],
+            profilePath: actorData['profile_path'],
+            popularity: actorData['popularity']?.toDouble(),
+            biography: '',
+            knownForMovies: actorData['known_for']?.map<String>((movie) => 
+              movie['title'] ?? movie['name'] ?? 'Unknown').toList() ?? [],
+          ));
+        }
+      }
+    } catch (e) {
+      print("Error searching actors: $e");
+    }
+    return actors;
+  }
+
+  // ==================== MÉTODOS PARA SERIES ====================
   static Future<List<Series>> getPopularTvShows() async {
     List<Series> series = [];
     try {
