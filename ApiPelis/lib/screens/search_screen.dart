@@ -126,7 +126,7 @@ class _ResultItem extends StatelessWidget {
                     type == 'movie' 
                       ? (item as Movie).title
                       : type == 'series'
-                        ? (item as Series).name
+                        ? (item as Series).title
                         : (item as Actor).name,
                     style: const TextStyle(
                       fontSize: 18,

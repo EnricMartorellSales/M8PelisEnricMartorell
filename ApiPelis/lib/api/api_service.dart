@@ -26,6 +26,23 @@ class ApiService {
     }
   }
 
+  static Future<List<Movie>?> getPopularMovies() async {
+    List<Movie> movies = [];
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '${Api.baseUrl}movie/popular?api_key=${Api.apiKey}&language=en-US&page=1'));
+      var res = jsonDecode(response.body);
+      res['results'].take(6).forEach(
+            (m) => movies.add(
+              Movie.fromMap(m),
+            ),
+          );
+      return movies;
+    } catch (e) {
+      return null;
+    }
+  }
+
   static Future<List<Movie>?> getCustomMovies(String url) async {
     List<Movie> movies = [];
     try {

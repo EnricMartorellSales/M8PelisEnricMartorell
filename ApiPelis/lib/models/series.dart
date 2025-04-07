@@ -1,6 +1,6 @@
 class Series {
   final int id;
-  final String name;
+  final String title;
   final String overview;
   final String posterPath;
   final String backdropPath;
@@ -12,7 +12,7 @@ class Series {
 
   Series({
     required this.id,
-    required this.name,
+    required this.title,
     required this.overview,
     required this.posterPath,
     required this.backdropPath,
@@ -26,7 +26,7 @@ class Series {
   factory Series.fromMap(Map<String, dynamic> map) {
     return Series(
       id: map['id'] as int,
-      name: map['name'] ?? '',
+      title: map['name'] ?? '',
       overview: map['overview'] ?? '',
       posterPath: map['poster_path'] ?? '',
       backdropPath: map['backdrop_path'] ?? '',
