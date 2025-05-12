@@ -9,22 +9,28 @@ class Actor {
   Actor({
     required this.id,
     required this.name,
-    required this.profilePath,
-    required this.popularity,
-    required this.biography,
-    required this.knownForMovies,
+    this.profilePath,
+    this.popularity,
+    this.biography,
+    this.knownForMovies,
   });
 
   factory Actor.fromMap(Map<String, dynamic> map) {
+    // Procesar known_for correctamente (puede contener películas o series)
+    List<String> knownFor = [];
+    if (map['known_for'] != null) {
+      for (var item in map['known_for']) {
+        knownFor.add(item['title'] ?? item['name'] ?? 'Unknown');
+      }
+    }
+
     return Actor(
-      id: map['id'],
-      name: map['name'],
+      id: map['id'] ?? 0,
+      name: map['name'] ?? 'Unknown',
       profilePath: map['profile_path'],
       popularity: (map['popularity'] as num?)?.toDouble(),
       biography: map['biography'],
-      knownForMovies: (map['known_for'] as List<dynamic>?)
-          ?.map((movie) => movie['title'] as String)
-          .toList(),
+      knownForMovies: knownFor.isNotEmpty ? knownFor : null,
     );
   }
 }

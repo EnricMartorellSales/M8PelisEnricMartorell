@@ -172,19 +172,16 @@ class ApiService {
     try {
       final response = await http.get(Uri.parse(
           '${Api.baseUrl}search/person?api_key=${Api.apiKey}&language=en-US&query=$query&page=1'));
-      var data = jsonDecode(response.body);
-      if (data['results'] != null) {
-        for (var actorData in data['results']) {
-          actors.add(Actor(
-            id: actorData['id'],
-            name: actorData['name'],
-            profilePath: actorData['profile_path'],
-            popularity: actorData['popularity']?.toDouble(),
-            biography: '',
-            knownForMovies: actorData['known_for']?.map<String>((movie) => 
-              movie['title'] ?? movie['name'] ?? 'Unknown').toList() ?? [],
-          ));
+      
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['results'] != null) {
+          for (var actorData in data['results']) {
+            actors.add(Actor.fromMap(actorData));
+          }
         }
+      } else {
+        print('Error en la búsqueda de actores: ${response.statusCode}');
       }
     } catch (e) {
       print("Error searching actors: $e");
